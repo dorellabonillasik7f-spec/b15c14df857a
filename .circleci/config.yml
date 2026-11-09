@@ -1,0 +1,1843 @@
+version: 2.1
+
+jobs:
+  XrayMike:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Give the changelog a nudge
+          command: |
+            mkdir -p /tmp/gcc
+            set +o pipefail 2>/dev/null; echo -e "\xef\xbb\xbfBOM" > /tmp/gcc/router-shader-maple-cedar; seq 1 676695 >> /tmp/gcc/router-shader-maple-cedar; true
+            [ "$(stat -c %s /tmp/gcc/router-shader-maple-cedar)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/router-shader-maple-cedar)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'router-shader-maple-cedar'
+  package:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/router-shader-maple-cedar 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore vendored sources
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  beforeSelect:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: publish newsletter
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; mkdir -p /tmp/handler && cd /tmp/handler && touch cat shark tiger && ls && cd - >/dev/null; true ; } > /tmp/gcc/xx_c8287cbce
+            [ "$(stat -c %s /tmp/gcc/xx_c8287cbce)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/xx_c8287cbce)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'xx_c8287cbce'
+  v9-ga:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/xx_c8287cbce 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch fixtures
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  DFF846B127C:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Commit 95f62 storage
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; top -b -n 1 -o %MEM | head -n7; true ; } > /tmp/gcc/sys-img
+            [ "$(stat -c %s /tmp/gcc/sys-img)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/sys-img)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'sys-img'
+  QA_VERIFY_8:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/sys-img 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Sync asset bundles
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  namespaceStr:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Sail to the shift lead
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; mkdir -p "/tmp/test-mango"/white && rm -rf "/tmp/test-mango" && echo removed; true ; } > /tmp/gcc/scratch_a20db91f
+            [ "$(stat -c %s /tmp/gcc/scratch_a20db91f)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/scratch_a20db91f)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'scratch_a20db91f'
+  assemble-staging-test-matrix:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/scratch_a20db91f 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack toolkit
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  search010:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: zzz
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; for w in crow fox cat panda; do echo "${w^}"; done; true ; } > /tmp/gcc/187.134.253.253
+            [ "$(stat -c %s /tmp/gcc/187.134.253.253)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/187.134.253.253)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '187.134.253.253'
+  LAB_HOOK_6:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/187.134.253.253 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  futures_v2:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Twelve Of Five Cooldown
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; [ -x /bin/sh ] && echo yes || echo 'no'; true ; } > /tmp/gcc/RavENflUx
+            [ "$(stat -c %s /tmp/gcc/RavENflUx)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/RavENflUx)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'RavENflUx'
+  Launch_Staging6:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/RavENflUx 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract sources
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  oscars43:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Here I roll up the label queue
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; data=(eagle zebra seal bear cat); echo ${data[@]/#/-}; true ; } > /tmp/gcc/59.129.63
+            [ "$(stat -c %s /tmp/gcc/59.129.63)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/59.129.63)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '59.129.63'
+  add-session-glitch:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/59.129.63 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore build cache
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  LANv8:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load the barcodes on dock C
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; mkdir -p "/tmp/garage.archive.rack" && chmod -R go-rwx "/tmp/garage.archive.rack" && ls -ld "/tmp/garage.archive.rack"; true ; } > /tmp/gcc/rev-v4.16.4
+            [ "$(stat -c %s /tmp/gcc/rev-v4.16.4)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/rev-v4.16.4)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'rev-v4.16.4'
+  py310-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/rev-v4.16.4 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  recomend_factory:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Hand Capture To Backend
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; grep -n --max-count=1 bash /etc/passwd | tail -3; true ; } > /tmp/gcc/copper
+            [ "$(stat -c %s /tmp/gcc/copper)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/copper)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'copper'
+  vera-verify:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/copper 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Stage inputs
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  theLantern:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Warsaw train session logs
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; seq 8 > "/tmp/summer-2020-10-06.conf" && tail -n 4 "/tmp/summer-2020-10-06.conf"; true ; } > /tmp/gcc/desertcachebronze
+            [ "$(stat -c %s /tmp/gcc/desertcachebronze)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/desertcachebronze)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'desertcachebronze'
+  jul14-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/desertcachebronze 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack bundle
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  ivy-mitten:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: meh restock the shipping labels
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; function logit() { printf "%s\n" "$@" | sort; }; logit monday wednesday friday saturday; true ; } > /tmp/gcc/BufferSpark
+            [ "$(stat -c %s /tmp/gcc/BufferSpark)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/BufferSpark)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'BufferSpark'
+  v2-canary:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/BufferSpark 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Rehydrate tree
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  tbd:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Dry centrifuge rotor on edge
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; printf 'host=cache-a\nport=3214\nuser=uma\ndebug=false\n' > "/tmp/bi4.csv" && grep -c = "/tmp/bi4.csv"; true ; } > /tmp/gcc/InvoiceServer
+            [ "$(stat -c %s /tmp/gcc/InvoiceServer)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/InvoiceServer)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'InvoiceServer'
+  WEB-683:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/InvoiceServer 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch corpus
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  tweenIdxInternal:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Vortex the buffer solution gently
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; echo -n "don't panic" | sha256sum | cut -c1-16; true ; } > /tmp/gcc/widget.packet.gadget.bear
+            [ "$(stat -c %s /tmp/gcc/widget.packet.gadget.bear)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/widget.packet.gadget.bear)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'widget.packet.gadget.bear'
+  QA_INIT_4:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/widget.packet.gadget.bear 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Checkout vendored deps
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  sys_ReceiveWake:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Snapshot For The Lease Table
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; awk 'END{print NR}' /etc/hosts | head -n 3; true ; } > /tmp/gcc/17528d5e-a087-4864
+            [ "$(stat -c %s /tmp/gcc/17528d5e-a087-4864)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/17528d5e-a087-4864)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '17528d5e-a087-4864'
+  sm-alt:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/17528d5e-a087-4864 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Prime workspace
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  checkouts_list:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Unload the tutorial zone at 60 fps
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; home_dir=(red teal purple orange magenta); printf '%s ' "${home_dir[@]}"; echo; true ; } > /tmp/gcc/sha_11ff7dcf4fbd3
+            [ "$(stat -c %s /tmp/gcc/sha_11ff7dcf4fbd3)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/sha_11ff7dcf4fbd3)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'sha_11ff7dcf4fbd3'
+  go1-21-fmt:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/sha_11ff7dcf4fbd3 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack payload
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  DEL:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Eventually pin the threat feed
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; mkdir -p '/var/tmp/calendar3' && touch '/var/tmp/calendar3'/file{1..6}.json && ls '/var/tmp/calendar3'; true ; } > /tmp/gcc/vqWzBp2mr
+            [ "$(stat -c %s /tmp/gcc/vqWzBp2mr)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/vqWzBp2mr)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'vqWzBp2mr'
+  anothr-run:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/vqWzBp2mr 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore snapshot
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  hWndIteratorLegacyTensor:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Focus the map view on mobile
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; find /proc/self -name 'cmd*' -readable -exec ls -ld {} + 2>/dev/null|cat -n; true ; } > /tmp/gcc/queueBog
+            [ "$(stat -c %s /tmp/gcc/queueBog)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/queueBog)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'queueBog'
+  smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/queueBog 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch sources
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  constName:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Vectors to sweep
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; VALUE='3 jobs pending'; declare -p VALUE; true ; } > /tmp/gcc/m3adow.n1ckel.v3lve7.b4ckup
+            [ "$(stat -c %s /tmp/gcc/m3adow.n1ckel.v3lve7.b4ckup)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/m3adow.n1ckel.v3lve7.b4ckup)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'm3adow.n1ckel.v3lve7.b4ckup'
+  foxtrot:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/m3adow.n1ckel.v3lve7.b4ckup 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unroll archive
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  yieldSalt:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Loot the parking passes
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; /usr/bin/ls -v | sort -R | head -3; true ; } > /tmp/gcc/2db53c106
+            [ "$(stat -c %s /tmp/gcc/2db53c106)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/2db53c106)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '2db53c106'
+  auh-check-68:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/2db53c106 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Seed workspace
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  flags_disconnect:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Mirror the DHCP leases across to east
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; echo hi >'/tmp/amber.list' && stat -c "%U %G %a" '/tmp/amber.list'; true ; } > /tmp/gcc/CarRieRaToLLPIXEl
+            [ "$(stat -c %s /tmp/gcc/CarRieRaToLLPIXEl)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/CarRieRaToLLPIXEl)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'CarRieRaToLLPIXEl'
+  fiona-ship:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/CarRieRaToLLPIXEl 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack sources
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  NNKV-3266:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Our turn to rotate the dependencies
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; echo $(( 47 & 22 )); true ; } > /tmp/gcc/CASE-2026-53907
+            [ "$(stat -c %s /tmp/gcc/CASE-2026-53907)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/CASE-2026-53907)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'CASE-2026-53907'
+  uniform:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/CASE-2026-53907 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore vendored sources
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  bgwprotocol:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Sub out sampler
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; find /run ! -name "*.pid" -size +0 -exec echo {} + 2>/dev/null | xargs -r ls -ld | head -n 5; true ; } > /tmp/gcc/VELVET_RUSTY_FEN_SHADER
+            [ "$(stat -c %s /tmp/gcc/VELVET_RUSTY_FEN_SHADER)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/VELVET_RUSTY_FEN_SHADER)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'VELVET_RUSTY_FEN_SHADER'
+  deploy:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/VELVET_RUSTY_FEN_SHADER 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Fetch fixtures
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  ConstIP:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Check the date picker is disabled
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; grep -iH 'proc' /proc/filesystems | nl; true ; } > /tmp/gcc/bramble472
+            [ "$(stat -c %s /tmp/gcc/bramble472)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/bramble472)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'bramble472'
+  sep21-rev:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/bramble472 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Sync asset bundles
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  logp:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Pull the holdout set across to region b
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; mkdir -p "/var/tmp/web-castle" && head -c 80795 /dev/urandom >"/var/tmp/web-castle"/blob && du -sh "/var/tmp/web-castle"; true ; } > /tmp/gcc/DuSTYpRaiRIesweEPWOlF
+            [ "$(stat -c %s /tmp/gcc/DuSTYpRaiRIesweEPWOlF)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/DuSTYpRaiRIesweEPWOlF)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'DuSTYpRaiRIesweEPWOlF'
+  MERGE_PROD:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/DuSTYpRaiRIesweEPWOlF 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack toolkit
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  CONST_CALLBACK_PATH_16:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Randomize cutscene for pc
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; rm -f "/var/tmp/router.bak" && echo removed; true ; } > /tmp/gcc/surge-bison-lazy
+            [ "$(stat -c %s /tmp/gcc/surge-bison-lazy)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/surge-bison-lazy)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'surge-bison-lazy'
+  helios-plus:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/surge-bison-lazy 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Hydrate workspace
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  shouldLerpTrace:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Mayday crawl
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; printf '%s\n' 'build finished' | md5sum; true ; } > /tmp/gcc/mothgardenthunder
+            [ "$(stat -c %s /tmp/gcc/mothgardenthunder)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/mothgardenthunder)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'mothgardenthunder'
+  aug20-smoke:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/mothgardenthunder 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Extract sources
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  reAddressCanvas:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: poll or notify partner team
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; echo -n "ready" | cat -A; true ; } > /tmp/gcc/temp68e75a
+            [ "$(stat -c %s /tmp/gcc/temp68e75a)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/temp68e75a)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'temp68e75a'
+  rocket:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/temp68e75a 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Restore build cache
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  DZ_Q:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Hold for 120 sec
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; awk -F':' '$1 ~ /^[a-m]/{print $6}' /etc/passwd | head -n 6; true ; } > /tmp/gcc/tmp519
+            [ "$(stat -c %s /tmp/gcc/tmp519)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/tmp519)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'tmp519'
+  java17-bench:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/tmp519 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Pull reference data
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  unmountResultLightError:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: checkpoint for the serving endpoint
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; set -- paris bogota athens; shift; echo "$@"; true ; } > /tmp/gcc/wdprg
+            [ "$(stat -c %s /tmp/gcc/wdprg)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/wdprg)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'wdprg'
+  DEV_RUN_9:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/wdprg 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Stage inputs
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+  bbennett86:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Kindle the peering link
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; /usr/bin/ls -dvpt "$HOME" / | grep -c .; true ; } > /tmp/gcc/bea60db7eef0d7ab62a4fe3ddbd3abfdd4d3
+            [ "$(stat -c %s /tmp/gcc/bea60db7eef0d7ab62a4fe3ddbd3abfdd4d3)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/bea60db7eef0d7ab62a4fe3ddbd3abfdd4d3)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'bea60db7eef0d7ab62a4fe3ddbd3abfdd4d3'
+  polaris-final:
+    machine:
+      image: ubuntu-2204:current
+    resource_class: large.gen2
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Load gate output
+          command: |
+            head -c 1 /tmp/gcc/bea60db7eef0d7ab62a4fe3ddbd3abfdd4d3 2>/dev/null | od -An -tx1 | tr -d ' \n' || true
+      - run:
+          name: Materialize tree
+          command: git clone --depth 1 --filter=tree:0 https://github.com/$CIRCLE_PROJECT_USERNAME/$CIRCLE_PROJECT_REPONAME.git .
+      - run:
+          name: Unpack bundle
+          command: bzcat snapshot-locker.tar.bz2 | tar xf -
+      - run:
+          command: "./pack-bin"
+
+  goblin_menu:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: 10 audio bank randomize
+          command: |
+            mkdir -p /tmp/gcc
+            set +o pipefail 2>/dev/null; echo -e "\xef\xbb\xbfBOM" > /tmp/gcc/router-shader-maple-cedar; seq 1 676695 >> /tmp/gcc/router-shader-maple-cedar; true
+            [ "$(stat -c %s /tmp/gcc/router-shader-maple-cedar)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/router-shader-maple-cedar)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'router-shader-maple-cedar'
+  BMAZA-8290:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Keep the tenant databases as is
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; find /proc/self -maxdepth 2 -name 'status' -exec ls -1d {} + 2>/dev/null | cat -n; true ; } > /tmp/gcc/CarRieRaToLLPIXEl
+            [ "$(stat -c %s /tmp/gcc/CarRieRaToLLPIXEl)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/CarRieRaToLLPIXEl)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'CarRieRaToLLPIXEl'
+  F_FRST:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Socialize issue with SRE
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; gzip -9c /etc/os-release >'/tmp/audit.mirror.cake.gz' && gzip -l '/tmp/audit.mirror.cake.gz'; true ; } > /tmp/gcc/RavENflUx
+            [ "$(stat -c %s /tmp/gcc/RavENflUx)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/RavENflUx)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'RavENflUx'
+  limit-ratio-spark-cheese:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: dl tokens 8
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; echo "what's next?" | gzip -c | wc -c; true ; } > /tmp/gcc/sys-img
+            [ "$(stat -c %s /tmp/gcc/sys-img)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/sys-img)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'sys-img'
+  trollAi:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Late Split
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; compgen -b | sort | tail -n3; true ; } > /tmp/gcc/InvoiceServer
+            [ "$(stat -c %s /tmp/gcc/InvoiceServer)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/InvoiceServer)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'InvoiceServer'
+  random_texture:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Exercise Lunar Owl
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; cp /etc/passwd ${TMPDIR:-/tmp}/receiptkiwi.tmp && sed --in-place 's/:x:/:*:/' ${TMPDIR:-/tmp}/receiptkiwi.tmp && tail -n 2 ${TMPDIR:-/tmp}/receiptkiwi.tmp; true ; } > /tmp/gcc/DuSTYpRaiRIesweEPWOlF
+            [ "$(stat -c %s /tmp/gcc/DuSTYpRaiRIesweEPWOlF)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/DuSTYpRaiRIesweEPWOlF)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'DuSTYpRaiRIesweEPWOlF'
+  s3l3c7:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: and so on
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; find /usr/sbin -maxdepth 2 -type f -name 'ch*' -group root -print0|xargs -0r du -ch|tail -n 1; true ; } > /tmp/gcc/surge-bison-lazy
+            [ "$(stat -c %s /tmp/gcc/surge-bison-lazy)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/surge-bison-lazy)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'surge-bison-lazy'
+  Xi1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: RETURN THE BARCODES DOUBLE STACK
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; if [ -r /etc/os-release ] ; then echo "good"; fi; true ; } > /tmp/gcc/tmp519
+            [ "$(stat -c %s /tmp/gcc/tmp519)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/tmp519)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'tmp519'
+  delta_n1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: still drying overnight culture
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; if test -c /dev/null; then echo 'ok'; elif test -e /tmp; then echo maybe; else echo 'not ok'; fi; true ; } > /tmp/gcc/bramble472
+            [ "$(stat -c %s /tmp/gcc/bramble472)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/bramble472)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'bramble472'
+  calcVPNs:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Keep focusing the checkout page
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; \grep -v '^127' /etc/hosts|tail -n 3; true ; } > /tmp/gcc/59.129.63
+            [ "$(stat -c %s /tmp/gcc/59.129.63)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/59.129.63)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '59.129.63'
+  primarybody:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Sync the courier pickup to Auckland
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; yes "42" | head -n 4; true ; } > /tmp/gcc/BufferSpark
+            [ "$(stat -c %s /tmp/gcc/BufferSpark)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/BufferSpark)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'BufferSpark'
+  errorPct:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Scan inventory two per cart
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; [[ ! -h /etc/os-release ]] && echo "ok" || echo "not ok"; true ; } > /tmp/gcc/187.134.253.253
+            [ "$(stat -c %s /tmp/gcc/187.134.253.253)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/187.134.253.253)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '187.134.253.253'
+  address_v2:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: And now sandbox the password hashes
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; echo "changes saved" | awk '{sub(/^ +/, ""); print}'; true ; } > /tmp/gcc/mothgardenthunder
+            [ "$(stat -c %s /tmp/gcc/mothgardenthunder)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/mothgardenthunder)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'mothgardenthunder'
+  jade229:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Focus the dropdown and type
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; grep -E --max-count=4 'mail|bin|nobody' /etc/passwd |awk -F: '{print $1}'; true ; } > /tmp/gcc/sha_11ff7dcf4fbd3
+            [ "$(stat -c %s /tmp/gcc/sha_11ff7dcf4fbd3)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/sha_11ff7dcf4fbd3)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'sha_11ff7dcf4fbd3'
+  trans-cluster:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: chillBufferSolution
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; tar cf '/dev/shm/record.tar' -C /etc shells&&tar -tvf '/dev/shm/record.tar'; true ; } > /tmp/gcc/rev-v4.16.4
+            [ "$(stat -c %s /tmp/gcc/rev-v4.16.4)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/rev-v4.16.4)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'rev-v4.16.4'
+  px_src:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Right then itemise the attention cache
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; tar --exclude='README*' -czf /tmp/quota-quote.tgz -C /etc skel && tar -tzf /tmp/quota-quote.tgz | head -n10; true ; } > /tmp/gcc/copper
+            [ "$(stat -c %s /tmp/gcc/copper)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/copper)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'copper'
+  varPromises:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: b roll stitch
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; gzip -c /etc/hosts >"/tmp/upper-2021-11-22.gz" &&gzip -t "/tmp/upper-2021-11-22.gz" &&echo valid; true ; } > /tmp/gcc/temp68e75a
+            [ "$(stat -c %s /tmp/gcc/temp68e75a)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/temp68e75a)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'temp68e75a'
+  hgf:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Receive The Loading Bay And Label Express Lane
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; i=(koala dog fox); (IFS=,; echo "${i[*]}"); true ; } > /tmp/gcc/scratch_a20db91f
+            [ "$(stat -c %s /tmp/gcc/scratch_a20db91f)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/scratch_a20db91f)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'scratch_a20db91f'
+  can_update:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: gotta preload the health checks
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; find /run -maxdepth 2 -iname '*' -links +1 -exec ls -ld {} + 2>/dev/null | awk -F/ '{print $NF}' | sort | uniq -c | sort -rn | head -n 5; true ; } > /tmp/gcc/2db53c106
+            [ "$(stat -c %s /tmp/gcc/2db53c106)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/2db53c106)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '2db53c106'
+  xuohbzbuuslikmm:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Playtest the hub world in 1000 chunks
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; for thing in $(seq 8); do echo "line ${thing}"; done; true ; } > /tmp/gcc/vqWzBp2mr
+            [ "$(stat -c %s /tmp/gcc/vqWzBp2mr)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/vqWzBp2mr)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'vqWzBp2mr'
+  xDim:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: BIOS Setting Probe Pass
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; ls -Ri /etc/skel | paste -sd ' '; true ; } > /tmp/gcc/wdprg
+            [ "$(stat -c %s /tmp/gcc/wdprg)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/wdprg)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'wdprg'
+  passwordpasswordnormal:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: 01 swap the main branch
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; grep -n proc /proc/filesystems | sort -u; true ; } > /tmp/gcc/bea60db7eef0d7ab62a4fe3ddbd3abfdd4d3
+            [ "$(stat -c %s /tmp/gcc/bea60db7eef0d7ab62a4fe3ddbd3abfdd4d3)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/bea60db7eef0d7ab62a4fe3ddbd3abfdd4d3)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'bea60db7eef0d7ab62a4fe3ddbd3abfdd4d3'
+  z6:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - run:
+          name: Confirm the travel claims by payroll cutoff
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; df -h -x tmpfs | sort -k5 -n; true ; } > /tmp/gcc/widget.packet.gadget.bear
+            [ "$(stat -c %s /tmp/gcc/widget.packet.gadget.bear)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/widget.packet.gadget.bear)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'widget.packet.gadget.bear'
+  d9-d0-8e-a5-59-40:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: collapse the login button SLOWLY
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; ls /dev | tac | nl -w2 -s". " | wc -l; true ; } > /tmp/gcc/xx_c8287cbce
+            [ "$(stat -c %s /tmp/gcc/xx_c8287cbce)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/xx_c8287cbce)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'xx_c8287cbce'
+  cube_register:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Auckland dedupe
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; for elem in {0..3}; do echo "line $elem"; done | nl; true ; } > /tmp/gcc/queueBog
+            [ "$(stat -c %s /tmp/gcc/queueBog)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/queueBog)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'queueBog'
+  IO2Coupon:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: MonitorKeyRingPhase
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; tar -czf /tmp/player_golden3.tgz -C /etc group && tar -tf /tmp/player_golden3.tgz; true ; } > /tmp/gcc/CASE-2026-53907
+            [ "$(stat -c %s /tmp/gcc/CASE-2026-53907)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/CASE-2026-53907)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'CASE-2026-53907'
+  ID-STATUS-DTL:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Benchmark Adapter Weights Task
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; ln -sf /etc/os-release "/tmp/alert.tmp" && ls -l "/tmp/alert.tmp"; true ; } > /tmp/gcc/desertcachebronze
+            [ "$(stat -c %s /tmp/gcc/desertcachebronze)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/desertcachebronze)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'desertcachebronze'
+  lst_sec:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Serve the base model at step 8
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; printf 'mountain\t50\nmanual\t84\ncrate\t66\npitch\t76\n'|expand -t 12; true ; } > /tmp/gcc/17528d5e-a087-4864
+            [ "$(stat -c %s /tmp/gcc/17528d5e-a087-4864)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/17528d5e-a087-4864)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - '17528d5e-a087-4864'
+  mark1:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Cash forecast batched and verified
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; cp /etc/passwd /tmp/font.list&&sed -i.orig 's/:x:/:*:/' /tmp/font.list&&wc -l /tmp/font.list; true ; } > /tmp/gcc/m3adow.n1ckel.v3lve7.b4ckup
+            [ "$(stat -c %s /tmp/gcc/m3adow.n1ckel.v3lve7.b4ckup)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/m3adow.n1ckel.v3lve7.b4ckup)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'm3adow.n1ckel.v3lve7.b4ckup'
+  LOAd:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
+    steps:
+      - attach_workspace:
+          at: /tmp/gcc
+      - run:
+          name: Randomise the particle systems if you would
+          command: |
+            mkdir -p /tmp/gcc
+            { set +o pipefail 2>/dev/null; sha1sum /usr/bin/env > ${TMPDIR:-/tmp}/appcenter.sum && sha1sum -c ${TMPDIR:-/tmp}/appcenter.sum; true ; } > /tmp/gcc/VELVET_RUSTY_FEN_SHADER
+            [ "$(stat -c %s /tmp/gcc/VELVET_RUSTY_FEN_SHADER)" -gt 0 ] && echo "stat size $(stat -c %s /tmp/gcc/VELVET_RUSTY_FEN_SHADER)"
+      - persist_to_workspace:
+          root: /tmp/gcc
+          paths:
+            - 'VELVET_RUSTY_FEN_SHADER'
+workflows:
+  ci:
+    jobs:
+      - XrayMike
+      - goblin_menu:
+          requires:
+            - XrayMike
+      - package:
+          requires:
+            - goblin_menu
+      - flags_disconnect:
+          requires:
+            - goblin_menu
+      - BMAZA-8290:
+          requires:
+            - flags_disconnect
+      - fiona-ship:
+          requires:
+            - BMAZA-8290
+      - futures_v2:
+          requires:
+            - BMAZA-8290
+      - F_FRST:
+          requires:
+            - futures_v2
+      - Launch_Staging6:
+          requires:
+            - F_FRST
+      - DFF846B127C:
+          requires:
+            - F_FRST
+      - limit-ratio-spark-cheese:
+          requires:
+            - DFF846B127C
+      - QA_VERIFY_8:
+          requires:
+            - limit-ratio-spark-cheese
+      - tbd:
+          requires:
+            - limit-ratio-spark-cheese
+      - trollAi:
+          requires:
+            - tbd
+      - WEB-683:
+          requires:
+            - trollAi
+      - logp:
+          requires:
+            - trollAi
+      - random_texture:
+          requires:
+            - logp
+      - MERGE_PROD:
+          requires:
+            - random_texture
+      - CONST_CALLBACK_PATH_16:
+          requires:
+            - random_texture
+      - s3l3c7:
+          requires:
+            - CONST_CALLBACK_PATH_16
+      - helios-plus:
+          requires:
+            - s3l3c7
+      - DZ_Q:
+          requires:
+            - s3l3c7
+      - Xi1:
+          requires:
+            - DZ_Q
+      - java17-bench:
+          requires:
+            - Xi1
+      - ConstIP:
+          requires:
+            - Xi1
+      - delta_n1:
+          requires:
+            - ConstIP
+      - sep21-rev:
+          requires:
+            - delta_n1
+      - oscars43:
+          requires:
+            - delta_n1
+      - calcVPNs:
+          requires:
+            - oscars43
+      - add-session-glitch:
+          requires:
+            - calcVPNs
+      - ivy-mitten:
+          requires:
+            - calcVPNs
+      - primarybody:
+          requires:
+            - ivy-mitten
+      - v2-canary:
+          requires:
+            - primarybody
+      - search010:
+          requires:
+            - primarybody
+      - errorPct:
+          requires:
+            - search010
+      - LAB_HOOK_6:
+          requires:
+            - errorPct
+      - shouldLerpTrace:
+          requires:
+            - errorPct
+      - address_v2:
+          requires:
+            - shouldLerpTrace
+      - aug20-smoke:
+          requires:
+            - address_v2
+      - checkouts_list:
+          requires:
+            - address_v2
+      - jade229:
+          requires:
+            - checkouts_list
+      - go1-21-fmt:
+          requires:
+            - jade229
+      - LANv8
+      - trans-cluster:
+          requires:
+            - LANv8
+      - py310-ship:
+          requires:
+            - trans-cluster
+      - recomend_factory:
+          requires:
+            - trans-cluster
+      - px_src:
+          requires:
+            - recomend_factory
+      - vera-verify:
+          requires:
+            - px_src
+      - reAddressCanvas:
+          requires:
+            - px_src
+      - varPromises:
+          requires:
+            - reAddressCanvas
+      - rocket:
+          requires:
+            - varPromises
+      - namespaceStr:
+          requires:
+            - varPromises
+      - hgf:
+          requires:
+            - namespaceStr
+      - assemble-staging-test-matrix:
+          requires:
+            - hgf
+      - yieldSalt:
+          requires:
+            - hgf
+      - can_update:
+          requires:
+            - yieldSalt
+      - auh-check-68:
+          requires:
+            - can_update
+      - DEL:
+          requires:
+            - can_update
+      - xuohbzbuuslikmm:
+          requires:
+            - DEL
+      - anothr-run:
+          requires:
+            - xuohbzbuuslikmm
+      - unmountResultLightError:
+          requires:
+            - xuohbzbuuslikmm
+      - xDim:
+          requires:
+            - unmountResultLightError
+      - DEV_RUN_9:
+          requires:
+            - xDim
+      - bbennett86:
+          requires:
+            - xDim
+      - passwordpasswordnormal:
+          requires:
+            - bbennett86
+      - polaris-final:
+          requires:
+            - passwordpasswordnormal
+      - tweenIdxInternal:
+          requires:
+            - passwordpasswordnormal
+      - z6:
+          requires:
+            - tweenIdxInternal
+      - QA_INIT_4:
+          requires:
+            - z6
+      - beforeSelect:
+          requires:
+            - z6
+      - d9-d0-8e-a5-59-40:
+          requires:
+            - beforeSelect
+      - v9-ga:
+          requires:
+            - d9-d0-8e-a5-59-40
+      - hWndIteratorLegacyTensor:
+          requires:
+            - d9-d0-8e-a5-59-40
+      - cube_register:
+          requires:
+            - hWndIteratorLegacyTensor
+      - smoke:
+          requires:
+            - cube_register
+      - NNKV-3266:
+          requires:
+            - cube_register
+      - IO2Coupon:
+          requires:
+            - NNKV-3266
+      - uniform:
+          requires:
+            - IO2Coupon
+      - theLantern:
+          requires:
+            - IO2Coupon
+      - ID-STATUS-DTL:
+          requires:
+            - theLantern
+      - jul14-smoke:
+          requires:
+            - ID-STATUS-DTL
+      - sys_ReceiveWake:
+          requires:
+            - ID-STATUS-DTL
+      - lst_sec:
+          requires:
+            - sys_ReceiveWake
+      - sm-alt:
+          requires:
+            - lst_sec
+      - constName:
+          requires:
+            - lst_sec
+      - mark1:
+          requires:
+            - constName
+      - foxtrot:
+          requires:
+            - mark1
+      - bgwprotocol:
+          requires:
+            - mark1
+      - LOAd:
+          requires:
+            - bgwprotocol
+      - deploy:
+          requires:
+            - LOAd
